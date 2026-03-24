@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+/* =========================================
+   タスク一覧テーブル用スタイル
+   ========================================= */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.task-content {
+    text-align: left;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+/* =========================================
+   期限表示用の色分けクラス
+   ========================================= */
+.date-past-or-today {
+    background-color: #ffcccc; /* 当日以前は赤色系の背景 */
+    color: #cc0000;
+}
+
+.date-future {
+    background-color: #ffffcc; /* 翌日以降は黄色系の背景 */
+    color: #cccc00;
+}
+
+/* =========================================
+   レイアウト調整用クラス（インラインスタイルから分離）
+   ========================================= */
+/* 検索フォーム全体の余白 */
+.search-form {
+    margin-bottom: 20px;
+}
+
+/* 要素間の左余白 */
+.ml-10 {
+    margin-left: 10px;
+}
+
+/* ボタンやフォームを横並びにする */
+.inline-form {
+    display: inline;
+}
