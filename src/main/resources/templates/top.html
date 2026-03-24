@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoリスト - TOP画面</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- ヘッダー部分　エラーメッセージをここに配置 -->
+
+<div th:text="'本日の日付：' + ${currentDate}">
+</div>
+
+<button type="submit" class="ml-10">新規タスク</button>
+
+<!-- 検索（絞り込み）フォームエリア -->
+<form action="/search" method="GET" class="search-form">
+    <label>期限：</label>
+    <input type="date" name="startDate"> ～
+    <input type="date" name="endDate">
+
+    <label class="ml-10">ステータス：</label>
+    <select name="searchStatus">
+        <option value="">（選択なし）</option>
+        <option value="1">未着手</option>
+        <option value="2">実行中</option>
+        <option value="3">ステイ中</option>
+        <option value="4">完了</option>
+    </select>
+
+    <label class="ml-10">タスク内容：</label>
+    <input type="text" name="searchContent" maxlength="140">
+
+    <button type="submit" class="ml-10">絞込</button>
+</form>
+
+<!-- タスク一覧テーブルエリア -->
+<table>
+    <thead>
+    <tr>
+        <th>タスク内容</th>
+        <th>ステータス</th>
+        <th>タスク期限</th>
+        <th>編集</th>
+        <th>削除</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- ここから下の<tr>要素は、バックエンド側でタスクの件数分ループして出力する -->
+    <tr>
+        <td class="task-content">未着手タスク（サンプル）</td>
+        <td>
+            <!-- ステータス変更フォーム -->
+            <form action="/updateStatus" method="POST" onsubmit="return confirm('ステータスを更新しますか？');" class="inline-form">
+                <input type="hidden" name="taskId" value="1">
+                <select name="status">
+                    <option value="1" selected>未着手</option>
+                    <option value="2">実行中</option>
+                    <option value="3">ステイ中</option>
+                    <option value="4">完了</option>
+                </select>
+                <button type="submit">変更</button>
+            </form>
+        </td>
+        <!-- 期限の色分け（例として当日以前のクラスを付与） -->
+        <td class="date-past-or-today">2022/10/19</td>
+        <td>
+            <!-- 編集画面への遷移 -->
+            <form action="/edit" method="GET" class="inline-form">
+                <input type="hidden" name="taskId" value="1">
+                <button type="submit">編集</button>
+            </form>
+        </td>
+        <td>
+            <!-- タスク削除機能 -->
+            <form action="/delete" method="POST" onsubmit="return confirm('タスクを削除しますか？');" class="inline-form">
+                <input type="hidden" name="taskId" value="1">
+                <button type="submit">削除</button>
+            </form>
+        </td>
+    </tr>
+    <!-- ループ終了 -->
+    </tbody>
+</table>
+
+</body>
+</html>
