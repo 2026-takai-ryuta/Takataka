@@ -5,6 +5,9 @@ import com.example.takataka.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,6 +50,46 @@ public class TodoController {
         mav.setViewName("/top");
 
         return mav;
+    }
+
+    /*
+     * 日付検索処理
+     */
+    @GetMapping("/search")
+    public ModelAndView search(@RequestParam(name = "startDate", required = false) String startDate,
+                               @RequestParam(name = "endDate", required = false) String endDate,
+                               @RequestParam(name = "searchStatus", required = false) Integer searchStatus,
+                               @RequestParam(name = "searchContent", required = false) String searchContent
+    ) {
+        ModelAndView mav = new ModelAndView();
+
+        // Serviceの検索メソッドを呼び出す
+        List<TaskForm> contentData = taskService.searchTask(startDate, endDate, searchStatus, searchContent);
+
+        mav.setViewName("top");
+        mav.addObject("contents", contentData);
+
+        // 検索後も入力した日付を画面のフォームに残すための処理
+        mav.addObject("startDate", startDate);
+        mav.addObject("endDate", endDate);
+        mav.addObject("searchStatus", searchStatus);
+        mav.addObject("searchContent", searchContent);
+
+        return mav;
+    }
+
+    /*
+     * ステータス変更処理
+     */
+    @PostMapping("/updateStatus")
+    public ModelAndView updateStatus(@RequestParam("taskId") Integer taskId,
+                                     @RequestParam("status") Integer status) {
+
+        // ① Serviceのステータス更新処理を呼び出す
+        taskService.updateStatus(taskId, status);
+
+        // ② TOP画面のURLを設定し、リダイレクト処理をする
+        return new ModelAndView("redirect:/");
     }
 
     // タスク削除
