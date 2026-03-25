@@ -1,19 +1,32 @@
 package com.example.takataka.controller;
 
+import com.example.takataka.controller.form.TaskForm;
+import com.example.takataka.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 public class TodoController {
+    @Autowired
+    TaskService taskService;
 
     // 例として「http://localhost:8080/」にアクセスした時の処理
     @GetMapping("/")
     public ModelAndView showTopPage() {
         ModelAndView mav = new ModelAndView();
+
+        // タスク全件取得
+        List<TaskForm> taskData = taskService.findAllTask();
+        // 画面遷移先を表示
+        mav.addObject("tasks", taskData);
+        mav.addObject("taskModel", new TaskForm());
+
         // ① 現在の日付を取得し、「yyyy/MM/dd」形式にフォーマットする
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
