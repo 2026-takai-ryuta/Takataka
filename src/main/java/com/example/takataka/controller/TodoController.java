@@ -75,4 +75,18 @@ public class TodoController {
 
         return mav;
     }
+
+    /*
+     * ステータス変更処理
+     */
+    @PostMapping("/updateStatus")
+    public ModelAndView updateStatus(@RequestParam("taskId") Integer taskId,
+                                     @RequestParam("status") Integer status) {
+
+        // ① Serviceのステータス更新処理を呼び出す
+        taskService.updateStatus(taskId, status);
+
+        // ② TOP画面のURLを設定し、リダイレクト処理をする
+        return new ModelAndView("redirect:/");
+    }
 }

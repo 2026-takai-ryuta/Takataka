@@ -74,4 +74,23 @@ public class TaskService {
 
     }
 
+    /*
+     * ステータス更新処理
+     */
+    public void updateStatus(Integer taskId, Integer status) {
+        // ① JpaRepositoryの機能を使って、リクエストされたIDのタスクをDBから取得する
+        Task task = taskRepository.findById(taskId).orElse(null);
+
+        if (task != null) {
+            // ② 取得したタスクのステータスを、画面から送られてきた新しいステータスで上書きする
+            task.setStatus(status);
+
+            // ③ 詳細設計書の要件に合わせて、更新日時にも現在時刻をセットする
+            task.setUpdatedDate(LocalDateTime.now());
+
+            // ④ 保存する（IDが既に存在するため、Spring Data JPAが自動的にUPDATE文を実行します）
+            taskRepository.save(task);
+        }
+    }
+
 }
