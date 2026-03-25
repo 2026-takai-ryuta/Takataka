@@ -17,20 +17,23 @@
 <!-- 検索（絞り込み）フォームエリア -->
 <form action="/search" method="GET" class="search-form">
     <label>期限：</label>
-    <input type="date" name="startDate"> ～
-    <input type="date" name="endDate">
+    <!-- th:value で Controller から送られてきた日付をセット -->
+    <input type="date" name="startDate" th:value="${startDate}"> ～
+    <input type="date" name="endDate" th:value="${endDate}">
 
     <label class="ml-10">ステータス：</label>
     <select name="searchStatus">
         <option value="">（選択なし）</option>
-        <option value="1">未着手</option>
-        <option value="2">実行中</option>
-        <option value="3">ステイ中</option>
-        <option value="4">完了</option>
+        <!-- th:selected で Controller から送られてきたステータスと一致するものを選択状態にする -->
+        <option value="1" th:selected="${searchStatus == 1}">未着手</option>
+        <option value="2" th:selected="${searchStatus == 2}">実行中</option>
+        <option value="3" th:selected="${searchStatus == 3}">ステイ中</option>
+        <option value="4" th:selected="${searchStatus == 4}">完了</option>
     </select>
 
     <label class="ml-10">タスク内容：</label>
-    <input type="text" name="searchContent" maxlength="140">
+    <!-- th:value で Controller から送られてきたタスク内容をセット -->
+    <input type="text" name="searchContent" maxlength="140" th:value="${searchContent}">
 
     <button type="submit" class="ml-10">絞込</button>
 </form>
@@ -49,38 +52,50 @@
     <tbody>
     <!-- ここから下の<tr>要素は、バックエンド側でタスクの件数分ループして出力する -->
     <tr>
-        <td class="task-content">未着手タスク（サンプル）</td>
+        <!-- ① Controllerから渡された "contents" を "content" に取り出しながら行(tr)をループ生成する -->
+    <tr th:each="content : ${contents}">
+
+        <!-- ② タスク内容を動的に表示 -->
+        <td class="task-content" th:text="${content.content}">未着手タスク（サンプル）</td>
+
         <td>
             <!-- ステータス変更フォーム -->
             <form action="/updateStatus" method="POST" onsubmit="return confirm('ステータスを更新しますか？');" class="inline-form">
-                <input type="hidden" name="taskId" value="1">
+                <!-- ③ 変更対象のタスクIDを動的にセットする -->
+                <input type="hidden" name="taskId" th:value="${content.id}">
                 <select name="status">
-                    <option value="1" selected>未着手</option>
-                    <option value="2">実行中</option>
-                    <option value="3">ステイ中</option>
-                    <option value="4">完了</option>
+                    <!-- ④ 現在のステータスに合わせて「選択状態（selected）」を切り替える -->
+                    <option value="1" th:selected="${content.status == 1}">未着手</option>
+                    <option value="2" th:selected="${content.status == 2}">実行中</option>
+                    <option value="3" th:selected="${content.status == 3}">ステイ中</option>
+                    <option value="4" th:selected="${content.status == 4}">完了</option>
                 </select>
                 <button type="submit">変更</button>
             </form>
         </td>
-        <!-- 期限の色分け（例として当日以前のクラスを付与） -->
-        <td class="date-past-or-today">2022/10/19</td>
+
+        <!-- ⑤ 期限を動的に表示 -->
+        <td class="date-past-or-today" th:text="${content.limitDate}">2022/10/19</td>
+
         <td>
             <!-- 編集画面への遷移 -->
+            <!-- 編集時のURLにIDを渡すためのサンプル（詳細設計に合わせて変更可） -->
             <form action="/edit" method="GET" class="inline-form">
-                <input type="hidden" name="taskId" value="1">
+                <!-- ⑥ 編集対象のタスクIDを動的にセットする -->
+                <input type="hidden" name="taskId" th:value="${content.id}">
                 <button type="submit">編集</button>
             </form>
         </td>
+
         <td>
             <!-- タスク削除機能 -->
             <form action="/delete" method="POST" onsubmit="return confirm('タスクを削除しますか？');" class="inline-form">
-                <input type="hidden" name="taskId" value="1">
+                <!-- ⑦ 削除対象のタスクIDを動的にセットする -->
+                <input type="hidden" name="taskId" th:value="${content.id}">
                 <button type="submit">削除</button>
             </form>
         </td>
     </tr>
-    <!-- ループ終了 -->
     </tbody>
 </table>
 

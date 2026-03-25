@@ -25,8 +25,23 @@ public class Task {
     private LocalDateTime limitDate;
 
     @Column(name = "created_date")
-    private LocalDateTime createdDate = LocalDateTime.now();
+    private LocalDateTime createdDate;
 
     @Column(name = "updated_date")
-    private LocalDateTime updatedDate = LocalDateTime.now();
+    private LocalDateTime updatedDate;
+
+    @PrePersist
+    public void onPrePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdDate = now; // 作成日時に現在時刻をセット
+        this.updatedDate = now; // 更新日時にも現在時刻をセット
+    }
+
+    /**
+     * DBのデータが更新（UPDATE）される直前に自動で実行される処理
+     */
+    @PreUpdate
+    public void onPreUpdate() {
+        this.updatedDate = LocalDateTime.now(); // 更新日時だけ現在時刻で上書き
+    }
 }
