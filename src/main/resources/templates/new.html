@@ -1,27 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="styleSheet">
-    <title>編集</title>
+    <title>タスク追加</title>
 </head>
 <body>
 <div class="header-contents">
-    <h2>タスク編集</h2>
+    <h2>タスク追加</h2>
 </div>
+</br>
 <div class="main-contents">
-    <form th:action="@{/task/update/{id}(id=${taskModel.id})}" th:object="${taskModel}" th:method="POST">
+    <form method="post" action="/add" th:object="${taskModel}">
         <div class="task-area">
             <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
             </span>
             <label>タスク内容</label>
             </br>
-            <textarea class="task-box" name="task" th:field="*{content}" rows="4" cols="20" /></textarea><br/>
+            <textarea class="task-box" th:field="*{content}" size="100" maxlength="500" ></textarea><br/>
+            </br>
             <label>タスク期限</label>
             </br>
             <input type="date" class="limitDate-box" th:field="${limitDate}" /></br>
-            <input type="hidden" th:field="*{id}" />
-            <input type="submit" value="編集"/>
+            </br>
+            <input type="submit" value="追加" />
         </div>
     </form>
 </div>
@@ -32,3 +34,4 @@
 </div>
 </body>
 </html>
+
