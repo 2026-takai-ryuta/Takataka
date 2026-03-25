@@ -5,6 +5,8 @@ import com.example.takataka.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
@@ -35,9 +37,24 @@ public class TodoController {
         // ② フォーマットした日付を "currentDate" という名前で画面に渡す
         mav.addObject("currentDate", formattedDate);
 
+        // TaskServiceの全件取得メソッドを呼び出す
+        List<TaskForm> contentData = taskService.findAllTask();
+
+        // "contents" という名前で、取得したタスクのリストをHTMLに渡す
+        mav.addObject("contents", contentData);
+
         // ③ 遷移先のHTMLファイル名を指定（拡張子不要）
         mav.setViewName("/top");
 
         return mav;
+    }
+
+    // タスク削除
+    @PostMapping("/delete")
+    public ModelAndView deleteTask(@RequestParam("taskId") Integer id) {
+        //
+        taskService.deleteTask(id);
+        //
+        return new ModelAndView("redirect:/");
     }
 }
