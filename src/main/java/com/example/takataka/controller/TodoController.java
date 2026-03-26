@@ -31,14 +31,6 @@ public class TodoController {
         mav.addObject("tasks", taskData);
         mav.addObject("taskModel", new TaskForm());
 
-        // ① 現在の日付を取得し、「yyyy/MM/dd」形式にフォーマットする
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        String formattedDate = today.format(formatter);
-
-        // ② フォーマットした日付を "currentDate" という名前で画面に渡す
-        mav.addObject("currentDate", formattedDate);
-
         // TaskServiceの全件取得メソッドを呼び出す
         List<TaskForm> contentData = taskService.findAllTask();
 

@@ -6,10 +6,12 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
+<div class="header-contents">
+    <h2>ToDo</h2>
+</div>
 <!-- ヘッダー部分　エラーメッセージをここに配置 -->
 
-<div th:text="'本日の日付：' + ${currentDate}">
+<div th:text="'本日の日付：' + ${#temporals.format(#temporals.createToday(), 'yyyy/MM/dd')}">
 </div>
 
 <button type="submit" class="ml-10">新規タスク</button>
@@ -75,11 +77,13 @@
         </td>
 
         <!-- ⑤ 期限を動的に表示 -->
-        <td class="date-past-or-today" th:text="${content.limitDate}">2022/10/19</td>
+        <td class="date-past-or-today"
+            th:style="${content.limitDate.toLocalDate().isAfter(#temporals.createToday())} ? 'background-color: yellow;' : 'background-color: red;'">
+            <span th:text="${#temporals.format(content.limitDate, 'yyyy/MM/dd')}">2022/10/19</span>
+        </td>
 
         <td>
             <!-- 編集画面への遷移 -->
-            <!-- 編集時のURLにIDを渡すためのサンプル（詳細設計に合わせて変更可） -->
             <form action="/edit" method="GET" class="inline-form">
                 <!-- ⑥ 編集対象のタスクIDを動的にセットする -->
                 <input type="hidden" name="taskId" th:value="${content.id}">
