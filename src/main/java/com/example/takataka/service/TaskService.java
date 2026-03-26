@@ -100,4 +100,44 @@ public class TaskService {
         taskRepository.deleteById(id);
 
     }
+
+    /*
+     * 編集対象のタスクを1件取得する処理
+     */
+    public TaskForm getTaskById(Integer taskId) {
+        // ① JpaRepositoryの機能を使って、IDが一致するタスクを取得する
+        // 見つからなかった場合は null を返すようにします
+        Task task = taskRepository.findById(taskId).orElse(null);
+
+        if (task != null) {
+            // ② 取得したTaskエンティティを、画面表示用のクラス（TaskFormなど）に変換する
+            // ※「setTaskForm」など、以前作成したリスト詰め替え用のメソッドがあれば、
+            // 一旦リストに入れてから0番目を取り出す形にすると簡単に変換できます。
+            return setTaskForm(List.of(task)).get(0);
+        }
+        return null;
+    }
+
+    /*
+     * タスク更新処理
+     */
+    public void updateTask(Integer id, TaskForm taskModel) {
+        // ① 更新対象のタスクをDBから取得する
+        Task task = taskRepository.findById(id).orElse(null);
+
+        if (task != null) {
+            // ② 画面から送られてきた「タスク内容」と「タスク期限」で上書きする
+            task.setContent(taskModel.getContent());
+
+            // ※Entity側の limitDate が LocalDateTime 型の場合、時刻を補完してセットします
+            // （例： task.setLimitDate(taskModel.getLimitDate().atTime(23, 59, 59)); など）
+            task.setLimitDate(taskModel.getLimitDate()); // 既存の型に合わせて調整してください
+
+            // ③ 更新日時を現在時刻で上書きする
+            task.setUpdatedDate(LocalDateTime.now());
+
+            // ④ 保存する（すでに存在するIDなので、自動的にUPDATE文が実行されます）
+            taskRepository.save(task);
+        }
+    }
 }

@@ -4,10 +4,9 @@ import com.example.takataka.controller.form.TaskForm;
 import com.example.takataka.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -98,6 +97,50 @@ public class TodoController {
         //
         taskService.deleteTask(id);
         //
+        return new ModelAndView("redirect:/");
+    }
+
+    /*
+     * タスク編集画面初期表示
+     */
+    @GetMapping("/edit")
+    public ModelAndView showEditPage(@RequestParam("taskId") Integer taskId) {
+        ModelAndView mav = new ModelAndView();
+
+        // ① Serviceを呼び出して、編集対象のタスク情報を取得する
+        TaskForm task = taskService.getTaskById(taskId);
+
+        // ② チームメンバーが作成した編集画面（task_edit.html）へ遷移先を指定する
+        mav.setViewName("task_edit");
+
+        // ③ 取得したタスク情報を、編集画面で表示できるように渡す
+        mav.addObject("taskModel", task);
+
+        return mav;
+    }
+
+    /*
+     * タスク編集（更新）処理
+     */
+    @PostMapping("/task/update/{id}")
+    public ModelAndView updateTask(@PathVariable("id") Integer id,
+                                   @Validated @ModelAttribute("taskModel") TaskForm taskModel,
+                                   BindingResult bindingResult) {
+        ModelAndView mav = new ModelAndView();
+
+        // ３．エラーメッセージリストのサイズをチェックする
+        if (bindingResult.hasErrors()) {
+            // エラーが1つ以上ある場合：編集画面（task_edit）へ戻す
+            mav.setViewName("task_edit");
+            return mav;
+        }
+
+        // ４．タスク更新処理
+        // エラーが0件の場合はServiceの更新処理を呼び出す
+        taskService.updateTask(id, taskModel);
+
+        // ５．TOP画面表示処理
+        // 更新成功時はTOP画面へリダイレクトする
         return new ModelAndView("redirect:/");
     }
 }
