@@ -4,10 +4,9 @@ import com.example.takataka.controller.form.TaskForm;
 import com.example.takataka.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -95,9 +94,39 @@ public class TodoController {
     // タスク削除
     @PostMapping("/delete")
     public ModelAndView deleteTask(@RequestParam("taskId") Integer id) {
-        //
+        // 削除処理呼び出し
         taskService.deleteTask(id);
-        //
+        //　TOP画面のURLを設定し、リダイレクトを処理する。
         return new ModelAndView("redirect:/");
+    }
+
+    //　タスク追加画面表示
+    @GetMapping("/new")
+    public ModelAndView newTask() {
+        ModelAndView mav = new ModelAndView();
+        // from用の空のフォームを用意
+        TaskForm taskForm = new TaskForm();
+        // 画面遷移先を指定
+        mav.setViewName("new");
+        // 準備した空のFormを補完
+        mav.addObject("taskModel", taskForm);
+        return mav;
+    }
+
+    // タスク追加処理
+    @PostMapping("/add")
+    public ModelAndView addTask(@Validated @ModelAttribute("taskModel") TaskForm taskForm, BindingResult result){
+        // エラーがあれば画面を戻す
+        if(result.hasErrors()) {
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("taskModel", taskForm);
+            mav.setViewName("new");
+            return  mav;
+        }
+
+        // 投稿をテーブルに格納
+        taskService.saveTask(taskForm);
+        // rootへリダイレクト
+        return  new ModelAndView("redirect:/");
     }
 }
