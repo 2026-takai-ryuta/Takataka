@@ -14,7 +14,9 @@
 <div th:text="'本日の日付：' + ${#temporals.format(#temporals.createToday(), 'yyyy/MM/dd')}">
 </div>
 
-<button type="submit" class="ml-10">新規タスク</button>
+<a th:href="@{/new}" class="ml-10">
+    <button type="button">新規タスク</button>
+</a>
 
 <!-- 検索（絞り込み）フォームエリア -->
 <form action="/search" method="GET" class="search-form">

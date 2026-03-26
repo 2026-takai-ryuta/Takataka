@@ -101,6 +101,22 @@ public class TaskService {
 
     }
 
+    // タスク追加
+    public void saveTask(TaskForm reqTask) {
+        Task saveTask = setTaskEntity(reqTask);
+        taskRepository.save(saveTask);
+    }
+
+    // リクエストから取得した情報をEntitiyに設定
+    private  Task setTaskEntity(TaskForm reqTask) {
+        Task task = new Task();
+        task.setContent(reqTask.getContent());
+        task.setId(reqTask.getId());
+        task.setStatus(reqTask.getStatus());
+        task.setLimitDate(reqTask.getLimitDate());
+        return  task;
+    }
+
     /*
      * 編集対象のタスクを1件取得する処理
      */
