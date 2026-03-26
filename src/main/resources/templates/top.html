@@ -81,7 +81,7 @@
         <!-- ⑤ 期限を動的に表示 -->
         <td class="date-past-or-today"
             th:style="${content.limitDate.toLocalDate().isAfter(#temporals.createToday())} ? 'background-color: yellow;' : 'background-color: red;'">
-            <span th:text="${#temporals.format(content.limitDate, 'yyyy/MM/dd')}">2022/10/19</span>
+            <span th:text="${#temporals.format(content.limitDate, 'yyyy/MM/dd HH:mm')}">2022/10/19</span>
         </td>
 
         <td>

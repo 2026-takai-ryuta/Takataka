@@ -13,23 +13,28 @@
 <div class="main-contents">
     <form method="post" action="/add" th:object="${taskModel}">
         <div class="task-area">
-            <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
-            </span>
+            <div>
+                <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
+            </div>
+            <!-- ★追加：タスク期限のエラー表示 -->
+            <div>
+                <span th:if="${#fields.hasErrors('limitDate')}" th:errors="*{limitDate}" style="color:red;"></span>
+            </div>
             <label>タスク内容</label>
             </br>
-            <textarea class="task-box" th:field="*{content}" size="100" maxlength="500" ></textarea><br/>
+            <textarea class="task-box" th:field="*{content}" size="100" maxlength="500"></textarea><br/>
             </br>
             <label>タスク期限</label>
             </br>
-            <input type="date" class="limit-Date-box" th:field="*{limitDate}" /></br>
+            <input type="datetime-local" class="limit-Date-box" th:field="*{limitDate}"/></br>
             </br>
-            <input type="submit" value="追加" />
+            <input type="submit" value="追加"/>
         </div>
     </form>
 </div>
 <div class="footer-contents">
     <form action="/">
-        <input type="submit" value="戻る" />
+        <input type="submit" value="戻る"/>
     </form>
 </div>
 </body>
