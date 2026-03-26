@@ -10,6 +10,9 @@
     <h2>ToDo</h2>
 </div>
 <!-- ヘッダー部分　エラーメッセージをここに配置 -->
+<div th:if="${errorMessage}">
+    <span th:text="${errorMessage}" style="color: red;"></span>
+</div>
 
 <div th:text="'本日の日付：' + ${#temporals.format(#temporals.createToday(), 'yyyy/MM/dd')}">
 </div>

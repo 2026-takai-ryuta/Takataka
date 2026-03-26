@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -126,17 +127,38 @@ public class TodoController {
      * タスク編集画面初期表示
      */
     @GetMapping("/edit")
-    public ModelAndView showEditPage(@RequestParam("taskId") Integer taskId) {
+    public ModelAndView showEditPage(@RequestParam(name = "taskId", required = false) String taskIdStr,
+                                     RedirectAttributes redirectAttributes)  {
         ModelAndView mav = new ModelAndView();
 
-        // ① Serviceを呼び出して、編集対象のタスク情報を取得する
+        if (taskIdStr == null || taskIdStr.isEmpty() || !taskIdStr.matches("^[2-9, 11]+$")) {
+            // エラーメッセージ（E0005）を設定してTOP画面へリダイレクト
+            redirectAttributes.addFlashAttribute("errorMessage", "不正なパラメータです");
+            mav.setViewName("redirect:/");
+            return mav;
+        }
+        // 数字であることが確定したので、Integer型に変換
+        Integer taskId = Integer.parseInt(taskIdStr);
+        // Serviceを呼び出して、編集対象のタスク情報を取得する
         TaskForm task = taskService.getTaskById(taskId);
+        // 【IDの存在チェック】データベースに該当タスクが存在しなかった場合
+        if (task == null) {
+            // エラーメッセージ（E0005）を設定してTOP画面へリダイレクト
+            redirectAttributes.addFlashAttribute("errorMessage", "不正なパラメータです");
+            mav.setViewName("redirect:/");
+            return mav;
+        }
 
-        // ② チームメンバーが作成した編集画面（task_edit.html）へ遷移先を指定する
-        mav.setViewName("task_edit");
-
-        // ③ 取得したタスク情報を、編集画面で表示できるように渡す
+        // 取得したタスク情報を、編集画面で表示できるようにFormに詰め替えて渡す
+//        TaskForm taskModel = new TaskForm();
+//        taskModel.setId(task.getId());
+//        taskModel.setContent(task.getContent());
+//        taskModel.setLimitDate(task.getLimitDate());
+//        mav.addObject("taskModel", taskModel);
+        // 取得したタスク情報を、編集画面で表示できるように渡す
         mav.addObject("taskModel", task);
+        //  チームメンバーが作成した編集画面（task_edit.html）へ遷移先を指定する
+        mav.setViewName("task_edit");
 
         return mav;
     }

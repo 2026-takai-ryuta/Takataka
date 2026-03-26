@@ -155,4 +155,11 @@ public class TaskService {
             taskRepository.save(task);
         }
     }
+
+    //タスク取得処理（IDで1件検索）
+    public Task findById(Integer id) {
+        // findByIdはJpaRepositoryに標準で用意されています
+        // 見つからなかった場合は null を返すように orElse(null) をつけます
+        return taskRepository.findById(id).orElse(null);
+    }
 }
