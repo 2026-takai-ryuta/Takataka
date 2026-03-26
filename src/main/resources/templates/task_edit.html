@@ -12,23 +12,27 @@
 <div class="main-contents">
     <form th:action="@{/task/update/{id}(id=${taskModel.id})}" th:object="${taskModel}" th:method="POST">
         <div class="task-area">
-            <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
-            </span>
+            <div>
+                <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="color:red;"></span>
+            </div>
+
+            <div>
+                <span th:if="${#fields.hasErrors('limitDate')}" th:errors="*{limitDate}" style="color:red;"></span>
+            </div>
             <label>タスク内容</label>
             </br>
-            <textarea class="task-box" name="task" th:field="*{content}" rows="4" cols="20" /></textarea><br/>
+            <textarea class="task-box" name="task" th:field="*{content}" rows="4" cols="20"/></textarea><br/>
             <label>タスク期限</label>
             </br>
-            <span th:if="${#fields.hasErrors('limitDate')}" th:errors="*{limitDate}" style="color:red;"></span>
-            <input type="datetime-local" class="limitDate-box" th:field="*{limitDate}" /></br>
-            <input type="hidden" th:field="*{id}" />
+            <input type="datetime-local" class="limitDate-box" th:field="*{limitDate}"/></br>
+            <input type="hidden" th:field="*{id}"/>
             <input type="submit" value="編集"/>
         </div>
     </form>
 </div>
 <div class="footer-contents">
     <form action="/">
-        <input type="submit" value="戻る" />
+        <input type="submit" value="戻る"/>
     </form>
 </div>
 </body>

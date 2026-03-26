@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 public class TaskForm {
     private Integer id;
     // 【必須チェック(E0001) / 文字数チェック(E0003)】
-    @NotBlank(message = "【タスクを入力してください】")
-    @Size(max = 140, message = "タスクは140文字以内で入力してください")
+    @NotBlank(message = "・タスクを入力してください")
+    @Size(max = 140, message = "・タスクは140文字以内で入力してください")
     private String content;
     private Integer status;
     // 【必須チェック(E0002) / 日付チェック(E0004)】
-    @NotNull(message = "期限を設定してください")
-    @FutureOrPresent(message = "無効な日付です")
+    @NotNull(message = "・期限を設定してください")
+    @FutureOrPresent(message = "・無効な日付です")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime limitDate;
 
