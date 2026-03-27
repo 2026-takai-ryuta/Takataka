@@ -14,7 +14,7 @@
     <form method="post" action="/add" th:object="${taskModel}">
         <div class="task-area">
             <div>
-                <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
+                <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="color:red;"></span>
             </div>
             <!-- ★追加：タスク期限のエラー表示 -->
             <div>

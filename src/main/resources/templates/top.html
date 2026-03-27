@@ -67,7 +67,7 @@
 
         <td>
             <!-- ステータス変更フォーム -->
-            <form action="/updateStatus" method="POST" onsubmit="return confirm('ステータスを更新しますか？');" class="inline-form">
+            <form action="/updateStatus" method="POST" onsubmit="if(confirm('ステータスを更新しますか？')){ return true; } else { this.reset(); return false; }" class="inline-form">
                 <!-- ③ 変更対象のタスクIDを動的にセットする -->
                 <input type="hidden" name="taskId" th:value="${content.id}">
                 <select name="status">
